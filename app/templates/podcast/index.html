@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %} Your Feeds {% endblock %}
+
+{% block page_content %}
+
+{% for podcast in podcasts %}
+<h2>{{ podcast.title }}</h2>
+<input class="form-control" type="text" value="{{ url_for("podcast.feed", podcast_id=podcast_id) }}" aria-label="RSS feed URL" readonly>
+{% endfor %}
+
+{% endblock %}
