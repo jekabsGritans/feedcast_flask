@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" %}
+{% block title %} Edit podcast {% endblock %}
+
+{% block page_content %}
+{{ wtf.quick_form(form) }}
+{% endblock %}

@@ -12,6 +12,12 @@ def not_found(error):
 from app.auth.controllers import auth as auth_mod
 from app.podcast.controllers import pod as pod_mod
 
+from flask_bootstrap import Bootstrap
+bootstrap = Bootstrap(app)
+
+from flask_moment import Moment
+moment = Moment(app)
+
 app.register_blueprint(auth_mod)
 app.register_blueprint(pod_mod)
 

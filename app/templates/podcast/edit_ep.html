@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" %}
+{% block title %} Edit episode {% endblock %}
+
+{% block page_content %}
+{{ form.csrf_token }}
+{{ wtf.quick_form(form) }}
+{% endblock %}
