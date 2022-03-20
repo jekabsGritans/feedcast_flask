@@ -26,3 +26,5 @@ CSRF_SESSION_KEY = uuid4().hex
 
 # Secret key for signing cookies
 SECRET_KEY = uuid4().hex
+
+SQLALCHEMY_TRACK_MODIFICATIONS = False
