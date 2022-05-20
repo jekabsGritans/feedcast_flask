@@ -12,11 +12,10 @@
 {% block content %}
 
 <div class="container">
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <main class="form-signin">
         <form method="POST">
             {{ form.csrf_token }}
-            <!-- <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
-            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
             {% with messages = get_flashed_messages() %}
             {% if messages%}
             {% for msg in messages %}
@@ -26,30 +25,27 @@
             {% endfor %}
             {% endif %}
             {% endwith %}
+            <div class="form-group">
 
-            <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
-                <label for="floatingInput">Email address</label>
-            </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" name="password"
-                    placeholder="Password">
-                <label for="floatingPassword">Password</label>
+                <div class="form-floating mb-3">
+                    {{ form.email(class="form-control", placeholder="name@example.com", id="floatingEmail") }}
+                    <label for="floatingEmail">Email</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form.password(class="form-control", placeholder="********", id="floatingPassword") }}
+                    <label for="floatingPassword">Password</label>
+                </div>
             </div>
 
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <button class="w-100 btn btn-lg btn-primary" name="signin" type="submit">Sign in</button>
-                <button class="w-100 btn btn-lg btn-outline-secondary" name="signup" type="submit">Sign up</button>
-            </div>
+            <button class="btn btn-lg w-100 btn-dark" name="signin" type="submit">Sign In</button>
+            <button class="btn btn-lg w-100 btn-outline-dark" name="signup" type="submit">Sign Up</button>
+              </div>
+
         </form>
 
 
     </main>
-    {% include "footer.html" %}
 </div>
-{% endblock %}
+{% endblock %}%

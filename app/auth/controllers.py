@@ -7,16 +7,11 @@ from app.auth.models import User
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-@auth.route('/test/', methods=['POST','GET'])
-def test():
-    return redirect('google.com')
-
 @auth.route('/signin/', methods=['POST','GET'])
 def signin():
     form = SignInForm(request.form)
     if form.validate_on_submit():
         if 'signup' in request.form:
-            session['tmp_usr'] = {"name":'example', "email":form.email, "password":form.password}
             return redirect(url_for('auth.signup'))
         
         user = User.query.filter_by(email=form.email.data).first()
@@ -25,24 +20,30 @@ def signin():
             if 'url' in session:
                 return redirect(session['url'])
             else:
-                return redirect()
+                return redirect('/')
         flash('Incorrect email or password')
-    return render_template('auth/signin.html',form=form)
+    return render_template('auth/signin.html', form=form)
 
 @auth.route('/signup/', methods=['POST','GET'])
 def signup():
-    form = SignUpForm(request.form,)#obj=User(**session.pop('tmp_usr',None)))
-    
+    form = SignUpForm(request.form)
     if form.validate_on_submit():
-        # user = User(**session.pop('tmp_usr', None))
-        user=User()
-        form.populate_obj(user)
-        # db.session.add(user)
-        if 'url' in session:
-            return redirect(session['url'])
-        else:
-            return redirect()
-    form = SignUpForm(obj=User(name='example',email='example@exm.com',password='password123'))
+        if 'signin' in request.form:
+            return redirect(url_for('auth.signin'))
+        
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            flash('Email address already registered')
+            return redirect(url_for('auth.signup'))
+        user = User(
+            email=form.email.data,
+            name=form.name.data,
+            password=generate_password_hash(form.password.data)
+        )
+        db.session.add(user)
+        db.session.commit()
+        session['user'] = user.id
+        return redirect(url_for('podcast.index'))
     return render_template('auth/signup.html', form=form)
         
 @auth.route('/singout/')

@@ -16,7 +16,7 @@ class User(Model):
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(50))
     email = db.Column(String(100))
-    password = db.Column(String(60))#hash with salt
+    password = db.Column(String(60))
 
     def __init__(self, name, email, password):
         self.name = name
