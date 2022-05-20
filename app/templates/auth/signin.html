@@ -11,10 +11,10 @@
 
 {% block content %}
 
-{{ form.csrf_token }}
 <div class="container">
     <main class="form-signin">
         <form method="POST">
+            {{ form.csrf_token }}
             <!-- <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
             {% with messages = get_flashed_messages() %}
@@ -43,8 +43,8 @@
                 </label>
             </div>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <button class="w-100 btn btn-lg btn-primary" name="submit" type="submit">Sign in</button>
-                <button class="w-100 btn btn-lg btn-outline-secondary" name="submit" type="submit" value="sign-up">Sign up</button>
+                <button class="w-100 btn btn-lg btn-primary" name="signin" type="submit">Sign in</button>
+                <button class="w-100 btn btn-lg btn-outline-secondary" name="signup" type="submit">Sign up</button>
             </div>
         </form>
 

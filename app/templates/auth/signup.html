@@ -11,10 +11,10 @@
 
 {% block content %}
 
-{{ form.csrf_token }}
 <div class="container">
     <main class="form-signin">
         <form method="POST">
+            {{ form.csrf_token }}
             <!-- <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
             <h1 class="h3 mb-3 fw-normal">Sign up</h1>
             {% with messages = get_flashed_messages() %}
@@ -28,18 +28,24 @@
             {% endwith %}
 
             <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
-                <label for="floatingInput">Email address</label>
+                <!-- <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
+                <label for="floatingInput">Email address</label> -->
+                {{ form.email(class="form-control", placeholder="Email Address") }}
+                {{ form.email.label() }}
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" name="password"
+                <!-- <input type="password" class="form-control" id="floatingPassword" name="password"
                     placeholder="Password">
-                <label for="floatingPassword">Password</label>
+                <label for="floatingPassword">Password</label> -->
+                {{ form.password(class="form-control", placeholder="Password") }}
+                {{ form.password.label() }}
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingConfirmPassword" name="confirm_password"
+                <!-- <input type="password" class="form-control" id="floatingConfirmPassword" name="confirm_password"
                     placeholder="Confirm Password">
-                <label for="floatingPassword">Confirm Password</label>
+                <label for="floatingPassword">Confirm Password</label> -->
+                {{ form.confirm_password(class="form-control", placeholder="Confirm Password") }}
+                {{ form.confirm_password.label() }}
             </div>
             <div class="checkbox mb-3">
                 <label>
