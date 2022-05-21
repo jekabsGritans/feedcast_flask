@@ -27,7 +27,7 @@ def index():
     if 'user' not in session:
         return redirect(url_for('auth.signin'))
     user_id = session.get('user')
-    podcasts = Podcast.query.filter_by(user_id=user_id)
+    podcasts = Podcast.query.filter_by(user_id=user_id).all()
     return render_template('podcast/index.html', podcasts=podcasts)
 
 @pod.route('/<podcast_id>/')

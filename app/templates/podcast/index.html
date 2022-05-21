@@ -1,11 +1,49 @@
 {% extends "base.html" %}
-{% block title %} Your Feeds {% endblock %}
+{% block title %} Your Podcasts {% endblock %}
 
 {% block page_content %}
+{% if podcasts %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Your Podcasts</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for podcast in podcasts %}
+                <tr>
+                    <td>{{ podcast.title }}</td>
+                    <td>{{ podcast.description }}</td>
+                    <td>
+                        <a href="{{ urlFor('podcast.edit', {id: podcast.id}) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ urlFor('podcast.delete', {id: podcast.id}) }}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
 
-{% for podcast in podcasts %}
-<h2>{{ podcast.title }}</h2>
-<input class="form-control" type="text" value="{{ url_for("podcast.feed", podcast_id=podcast_id) }}" aria-label="RSS feed URL" readonly>
-{% endfor %}
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">You currently have no podcasts</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Once you've created a podcast, it will show up here.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a class="btn btn-success btn-lg px-4 gap-3" href="#">New Podcast</a>
+      </div>
+    </div>
+  </div>
 
+{% endif %}
 {% endblock %}
