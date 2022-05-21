@@ -11,9 +11,6 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 def signin():
     form = SignInForm(request.form)
     if form.validate_on_submit():
-        if 'signup' in request.form:
-            return redirect(url_for('auth.signup'))
-        
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash(user.password, form.password.data):
             session['user'] = user.id
@@ -28,9 +25,6 @@ def signin():
 def signup():
     form = SignUpForm(request.form)
     if form.validate_on_submit():
-        if 'signin' in request.form:
-            return redirect(url_for('auth.signin'))
-        
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             flash('Email address already registered')
