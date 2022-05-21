@@ -28,20 +28,20 @@
             <div class="form-group">
 
                 <div class="form-floating mb-3">
-                    {{ form.email(class="form-control", placeholder="name@example.com", id="floatingEmail") }}
-                    <label for="floatingEmail">Email</label>
+                    {{ form.email(class="form-control", placeholder="name@example.com") }}
+                    {{ form.email.label }}
                 </div>
 
                 <div class="form-floating mb-3">
-                    {{ form.password(class="form-control", placeholder="********", id="floatingPassword") }}
-                    <label for="floatingPassword">Password</label>
+                    {{ form.password(class="form-control", placeholder="********") }}
+                    {{ form.password.label }}
                 </div>
             </div>
 
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button class="btn btn-lg w-100 btn-dark" name="signin" type="submit">Sign In</button>
-            <button class="btn btn-lg w-100 btn-outline-dark" name="signup" type="submit">Sign Up</button>
-              </div>
+                {{ form.submit(class="btn btn-lg w-100 btn-dark") }}
+                <a class="btn btn-lg w-100 btn-outline-dark" href="{{ url_for('auth.signup') }}">Sign Up</a>
+            </div>
 
         </form>
 
