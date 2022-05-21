@@ -31,6 +31,9 @@ class Podcast(Model):
     origin = db.Column(String(50), nullable=False)
     
     episodes = relationship('Episode', backref='podcast', lazy='select')
+
+    def __init__(self, user_id):
+        self.user_id = user_id
     
     def __repr__(self):
         return f"Podcast({self.title})"
@@ -51,6 +54,9 @@ class Episode(Model):
     image = db.Column(String(100), nullable=False)
     keywords = db.Column(Text)
     episode_type = db.Column(String(10), nullable=False)
+
+    def __init__(self, podcast_id):
+        self.podcast_id = podcast_id
 
     def __repr__(self):
         return f"Episode({self.title})"

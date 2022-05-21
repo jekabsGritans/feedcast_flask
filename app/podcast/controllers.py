@@ -7,22 +7,7 @@ from app.podcast.forms import PodcastEdit, EpisodeEdit
 
 pod = Blueprint('podcast', __name__, url_prefix='')
 
-def cache_route(routef):
-    session['url'] = url_for(routef.__name__)
-    return routef()
-
-
-@pod.route('/all/')
-def album():
-    if 'user' not in session:
-        return redirect(url_for('auth.signin'))
-    user_id = session.get('user')
-    podcasts = Podcast.query.filter_by(user_id=user_id)
-    return render_template('podcast/album.html', podcasts=podcasts)
-
-
 @pod.route('/')
-#@cache_route
 def index():
     if 'user' not in session:
         return redirect(url_for('auth.signin'))
@@ -30,14 +15,41 @@ def index():
     podcasts = Podcast.query.filter_by(user_id=user_id).all()
     return render_template('podcast/index.html', podcasts=podcasts)
 
-@pod.route('/<podcast_id>/')
-#@cache_route
-def view(podcast_id):
-    podcast = Podcast.query.get_or_404(podcast_id)
-    return render_template('podcast/view.html', podcast=podcast)
+@pod.route('/<int:podcast_id>/')
+def show(podcast_id):
+    if 'user' not in session:
+        return redirect(url_for('auth.signin'))
+    user_id = session.get('user')
+    podcast = Podcast.query.filter_by(id=podcast_id, user_id=user_id).first()
+    if not podcast:
+        abort(404)
+    episodes = Episode.query.filter_by(podcast_id=podcast_id).all()
+    return render_template('podcast/show.html', podcast=podcast, episodes=episodes)
+
+@pod.route('/new/')
+def new_pod():
+    if 'user' not in session:
+        return redirect(url_for('auth.signin'))
+    user_id = session.get('user')
+    podcast = Podcast(user_id=user_id)
+    db.session.add(podcast)
+    db.session.commit()
+    return redirect(url_for('podcast.edit', podcast_id=podcast.id))
+
+@pod.route('/<int:podcast_id>/new/')
+def new_ep(podcast_id):
+    if 'user' not in session:
+        return redirect(url_for('auth.signin'))
+    user_id = session.get('user')
+    podcast = Podcast.query.filter_by(id=podcast_id, user_id=user_id).first()
+    if not podcast:
+        abort(404)
+    episode = Episode(podcast_id=podcast_id)
+    db.session.add(episode)
+    db.session.commit()
+    return redirect(url_for('podcast.edit_ep', episode_id=episode.id))
 
 @pod.route('/<podcast_id>/edit/', methods=['POST','GET'])
-#@cache_route
 def edit(podcast_id):
     if 'user' not in session:
         return redirect(url_for('auth.signin'))
@@ -45,23 +57,14 @@ def edit(podcast_id):
     podcast = Podcast.query.get_or_404(podcast_id)
     if podcast.user.id != user_id:
         abort(404)
-
-    form =  PodcastEdit(request.form)
+    form =  PodcastEdit(obj=podcast)
     if form.validate_on_submit():
         form.populate_obj(podcast)
+        db.session.commit()
         return redirect(url_for('podcast.view', podcast_id=podcast_id))
-
-    form = PodcastEdit(obj=podcast)
     return render_template('podcast/edit.html', form=form)
 
-@pod.route('/episode/<episode_id>/')
-#@cache_route
-def view_ep(episode_id):
-    episode = Episode.query.get_or_404(episode_id)
-    return render_template('podacst/view_ep.html', episode=episode)
-
 @pod.route('/episode/<episode_id>/edit/', methods=['POST','GET'])
-#@cache_route
 def edit_ep(episode_id):
     if 'user' not in session:
         return redirect(url_for('auth.signin'))
@@ -69,17 +72,14 @@ def edit_ep(episode_id):
     episode = Episode.query.get_or_404(episode_id)
     if episode.podcast.user.id != user_id:
         abort(404)
-
-    form = EpisodeEdit(request.form)
+    form = EpisodeEdit(obj=episode)
     if form.validate_on_submit():
         form.populate_obj(episode)
+        db.session.commit()
         return redirect(url_for('podcast.view_ep', episode_id=episode_id))
-
-    form = EpisodeEdit(obj=episode)
     return render_template('podcast/edit_ep.html', form=form)
 
 @pod.route('/<podcast_id>/rss/')
-#@cache_route
 def feed(podcast_id):
     podcast = Podcast.query.get_or_404(podcast_id)
     feed = PodcastFeed(podcast)
