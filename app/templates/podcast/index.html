@@ -24,8 +24,8 @@
                     <td>{{ podcast.title }}</td>
                     <td>{{ podcast.description }}</td>
                     <td>
-                        <a href="{{ urlFor('podcast.edit', {id: podcast.id}) }}" class="btn btn-primary">Edit</a>
-                        <a href="{{ urlFor('podcast.delete', {id: podcast.id}) }}" class="btn btn-danger">Delete</a>
+                        <a href="{{ url_for('podcast.edit', podcast_id=podcast.id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ url_for('podcast.edit', podcast_id=podcast.id) }}" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}

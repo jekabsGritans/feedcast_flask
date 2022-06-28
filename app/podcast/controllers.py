@@ -55,13 +55,13 @@ def edit(podcast_id):
         return redirect(url_for('auth.signin'))
     user_id = session.get('user')
     podcast = Podcast.query.get_or_404(podcast_id)
-    if podcast.user.id != user_id:
+    if podcast.user_id != user_id:
         abort(404)
     form =  PodcastEdit(obj=podcast)
     if form.validate_on_submit():
         form.populate_obj(podcast)
         db.session.commit()
-        return redirect(url_for('podcast.view', podcast_id=podcast_id))
+        return redirect(url_for('podcast.show', podcast_id=podcast_id))
     return render_template('podcast/edit.html', form=form)
 
 @pod.route('/episode/<episode_id>/edit/', methods=['POST','GET'])
