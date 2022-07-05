@@ -27,7 +27,7 @@ def show(podcast_id):
     return render_template('podcast/show.html', podcast=podcast, episodes=episodes)
 
 @pod.route('/new/')
-def new_pod():
+def new():
     if 'user' not in session:
         return redirect(url_for('auth.signin'))
     user_id = session.get('user')
@@ -35,6 +35,18 @@ def new_pod():
     db.session.add(podcast)
     db.session.commit()
     return redirect(url_for('podcast.edit', podcast_id=podcast.id))
+
+@pod.route('/delete/<int:podcast_id>/')
+def delete(podcast_id):
+    if 'user' not in session:
+        return redirect(url_for('auth.signin'))
+    user_id = session.get('user')
+    podcast = Podcast.query.filter_by(id=podcast_id, user_id=user_id).first()
+    if not podcast:
+        abort(404)
+    db.session.delete(podcast)
+    db.session.commit()
+    return redirect(url_for('podcast.index'))
 
 @pod.route('/<int:podcast_id>/new/')
 def new_ep(podcast_id):

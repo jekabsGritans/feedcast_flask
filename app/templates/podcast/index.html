@@ -25,7 +25,7 @@
                     <td>{{ podcast.description }}</td>
                     <td>
                         <a href="{{ url_for('podcast.edit', podcast_id=podcast.id) }}" class="btn btn-primary">Edit</a>
-                        <a href="{{ url_for('podcast.edit', podcast_id=podcast.id) }}" class="btn btn-danger">Delete</a>
+                        <a href="{{ url_for('podcast.delete', podcast_id=podcast.id) }}" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -40,7 +40,7 @@
     <div class="col-lg-6 mx-auto">
       <p class="lead mb-4">Once you've created a podcast, it will show up here.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <a class="btn btn-success btn-lg px-4 gap-3" href="#">New Podcast</a>
+        <a class="btn btn-success btn-lg px-4 gap-3" href="{{ url_for('podcast.new')}}">New Podcast</a>
       </div>
     </div>
   </div>

@@ -3,6 +3,46 @@
 {% block title %} Edit episode {% endblock %}
 
 {% block page_content %}
-{{ form.csrf_token }}
-{{ wtf.quick_form(form) }}
+
+<div class="container">
+    <h1 class="h3 mb-3 font-weight-normal">Edit Episode</h1>
+    <main>
+        <form method="POST">
+            {{ form.csrf_token }}
+            <div class="mb-3">
+                {{ form.title.label }}
+                {{ form.title(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.description.label }}
+                {{ form.description(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.audio.label }}
+                {{ form.audio(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.image.label }}
+                {{ form.image(class="form-control")}}
+            </div>
+            <div class="mb-3">
+                {{ form.explicit(class="form-check-input")}}
+                {{ form.explicit.label }}
+            </div>
+            <div class="mb-3">
+                {{ form.episode_type.label }}
+                {{ form.episode_type(class="form-control")}}
+            </div>
+            <div class="mb-3">
+                {{ form.allowed_regions.label }}
+                {{ form.allowed_regions(class="form-control")}}
+            </div>
+            <div class="mb-3">
+                {{ form.submit(class="btn btn-lg w-100 btn-dark") }}
+            </div>
+        </form>
+    </main>
+</div>
+
+
 {% endblock %}
