@@ -25,7 +25,7 @@ class Podcast(Model):
     image = db.Column(String(100))
     explicit = db.Column(Boolean)
     categories = db.Column(String)
-    series_episodic = db.Column(Boolean)
+    ep_type = db.Column(String(10))
     allowed_regions = db.Column(String)
     ep_limit = db.Column(Integer)
     origin = db.Column(String(50))

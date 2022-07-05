@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %} {{podcast.title}} {% endblock %}
+
+{% block page_content %}
+{% if episodes %}
+<div class="row">
+    <div class="col-md-12">
+        <h1> {{ podcast.title }} </h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for episode in episodes %}
+                <tr>
+                    <td> episode.title </td>
+                    <td>{{ episode.description }}</td>
+                    <td>
+                        <a href="{{ url_for('podcast.edit_ep', episode_id=episode.id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ url_for('podcast.delete_ep', episode_id=episode.id) }}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">This podcast currently has no episodes</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Once you've created an episode, it will show up here.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a class="btn btn-success btn-lg px-4 gap-3" href="{{ url_for('podcast.new_ep', podcast_id=podcast.id)}}">New Episode</a>
+      </div>
+    </div>
+  </div>
+
+{% endif %}
+{% endblock %}

@@ -21,11 +21,12 @@
             <tbody>
                 {% for podcast in podcasts %}
                 <tr>
-                    <td>{{ podcast.title }}</td>
+                    <td> <a href=" {{ url_for('podcast.show', podcast_id=podcast.id) }} ">{{ podcast.title }}</a></td>
                     <td>{{ podcast.description }}</td>
                     <td>
                         <a href="{{ url_for('podcast.edit', podcast_id=podcast.id) }}" class="btn btn-primary">Edit</a>
                         <a href="{{ url_for('podcast.delete', podcast_id=podcast.id) }}" class="btn btn-danger">Delete</a>
+                        <a href="{{ url_for('podcast.new_ep', podcast_id=podcast.id) }}" class="btn btn-success">New Episode</a>
                     </td>
                 </tr>
                 {% endfor %}

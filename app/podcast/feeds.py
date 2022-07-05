@@ -16,7 +16,7 @@ class PodcastFeed:
         cats = podcast.categories.split()
         self.fg.itunes_category([
             {'cat':cats[0], 'sub':subc} for subc in cats[1:]])
-        self.fg.itunes_type('episodic' if podcast.series_episodic else 'serial')
+        self.fg.itunes_type(podcast.ep_type)
         self.fg.media_restriction(podcast.allowed_regions)
         self.fg.spotify_country_of_origin(podcast.origin)
 
