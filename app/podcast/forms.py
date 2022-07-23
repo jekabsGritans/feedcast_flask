@@ -26,12 +26,11 @@ with open('app/static/categories.txt','r') as f:
 class PodcastEdit(FlaskForm):
     title = StringField('Title', [InputRequired('Enter the title.')])
     description = TextAreaField('Description',[InputRequired('Enter the description.')])
-    language = SelectField('Language',[InputRequired(message='Choose the language.')], choices=language_choices)
+    language = SelectField('Language',[InputRequired(message='Choose the language.')], choices=language_choices, validate_choice=False)
     image = FileField('Thumbnail')
     explicit = BooleanField('Explicit')
-    category = SelectField('Content category', [InputRequired(message='Choose the category.')], choices=category_choices)
-    #sub_categories = SelectMultipleField('Subcategories')#load choices based on main cat
-    ep_type = SelectField('Episode type', [InputRequired('Choose the episode type.')], choices=[('episodic', 'Episodic'), ('serial', 'Serial')])
+    category = SelectField('Content category', [InputRequired(message='Choose the category.')], choices=category_choices, validate_choice=False)
+    ep_type = SelectField('Episode type', [InputRequired('Choose the episode type.')], choices=[('episodic', 'Episodic'), ('serial', 'Serial')], validate_choice=False)
     allowed_regions = SelectMultipleField('Allowed regions', choices=region_choices)
     ep_limit = IntegerField('Episode limit')
     origin = SelectField('Origin', [InputRequired('Choose the origin country.')], choices=region_choices)
@@ -46,5 +45,4 @@ class EpisodeEdit(FlaskForm):
     allowed_regions = SelectMultipleField('Allowed regions', choices=region_choices)
     explicit = BooleanField('Explicit')
     episode_type = SelectField('Type', [InputRequired('Choose the episode type.')], choices=[('full','Full'),('trailer','Trailer'),('bonus','Bonus')])
-    # keywords = # Custom bootstrap tags input field
     submit = SubmitField('Update')

@@ -66,28 +66,18 @@ def edit(podcast_id):
     if 'user' not in session:
         return redirect(url_for('auth.signin'))
     user_id = session.get('user')
+    user = User.query.get_or_404(user_id)
     podcast = Podcast.query.get_or_404(podcast_id)
     if podcast.user_id != user_id:
         abort(404)
-    form =  PodcastEdit(obj=podcast)
-    form.title.data = podcast.title
-    form.description.data = podcast.description
-    form.language.data = podcast.language
-    #form.image.data = # LOAD THE FILE
-    form.explicit.data = podcast.explicit
-
-    #cats = podcast.categories.split()
-    #form.category.data = cats[0]
-    #form.sub_categories.data = cats[1:]
+    form = PodcastEdit(request.form)
     
-    form.ep_type.data = podcast.ep_type
-
     if form.validate_on_submit():
         podcast.title = form.title.data
         podcast.description = form.description.data
         podcast.language = form.language.data
         podcast.explicit = form.explicit.data
-        podcast.categories = ' '.join(form.category.data + form.sub_categories) #include sub categories
+        podcast.categories = form.category.data#' '.join(form.category.data + form.sub_categories) #include sub categories
         podcast.ep_type = form.ep_type.data 
         podcast.ep_limit = form.ep_limit.data
         podcast.allowed_regions = ' '.join(form.allowed_regions.data)
@@ -96,12 +86,22 @@ def edit(podcast_id):
         #podcast.image = 
         #save image file and update image url
 
-        #podcast.link =  
-        #podcast.author_name = 
-        #podcast.author_email =
-
+        podcast.link = url_for('podcast.feed', podcast_id=podcast.id)
+        podcast.author_name = user.name
+        podcast.author_email = user.email
         db.session.commit()
         return redirect(url_for('podcast.show', podcast_id=podcast_id))
+    
+    form.title.data = podcast.title
+    form.description.data = podcast.description
+    form.language.data = podcast.language
+    #form.image.data = # LOAD THE FILE
+    form.category.data = podcast.categories
+    form.explicit.data = podcast.explicit
+    form.ep_type.data = podcast.ep_type
+    form.ep_limit.data = podcast.ep_limit
+    if podcast.allowed_regions:
+        form.allowed_regions.data = podcast.allowed_regions.split(' ')
     return render_template('podcast/edit.html', form=form)
 
 @pod.route('/episode/<episode_id>/edit/', methods=['POST','GET'])
@@ -109,14 +109,31 @@ def edit_ep(episode_id):
     if 'user' not in session:
         return redirect(url_for('auth.signin'))
     user_id = session.get('user')
+    user = User.query.get_or_404(user_id)
     episode = Episode.query.get_or_404(episode_id)
     if episode.podcast.user_id != user_id:
         abort(404)
     form = EpisodeEdit(obj=episode)
+
     if form.validate_on_submit():
-        form.populate_obj(episode)
+        episode.title = form.title.data
+        episode.description = form.description.data
+        # episode.audio = 
+        # episode.image = 
+        episode.allowed_regions = ' '.join(form.allowed_regions.data)
+        episode.explicit = form.explicit.data
+        episode.episode_type = form.episode_type.data
         db.session.commit()
         return redirect(url_for('podcast.view_ep', episode_id=episode_id))
+    
+    form.title.data = episode.title
+    form.description.data = episode.description
+    # form.audio.data = 
+    # form.image.data = 
+    if episode.allowed_regions:
+        form.allowed_regions.data = episode.allowed_regions.split(' ')
+    form.explicit.data = episode.explicit
+    form.episode_type.data = episode.episode_type
     return render_template('podcast/edit_ep.html', form=form)
 
 @pod.route('/episode/<episode_id>/delete/')
