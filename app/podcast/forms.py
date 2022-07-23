@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, StringField, DateTimeField, IntegerField, BooleanField, FileField, SelectField, SelectMultipleField, RadioField, SubmitField
+# from flask_wtf.file import FileField, FileRequired
+from wtforms import TextAreaField, StringField, DateTimeField, IntegerField, BooleanField, SelectField, SelectMultipleField, RadioField, SubmitField, FileField
 from wtforms.validators import InputRequired
 
 
@@ -27,7 +28,7 @@ class PodcastEdit(FlaskForm):
     title = StringField('Title', [InputRequired('Enter the title.')])
     description = TextAreaField('Description',[InputRequired('Enter the description.')])
     language = SelectField('Language',[InputRequired(message='Choose the language.')], choices=language_choices, validate_choice=False)
-    image = FileField('Thumbnail')
+    image = FileField('New Thumbnail')
     explicit = BooleanField('Explicit')
     category = SelectField('Content category', [InputRequired(message='Choose the category.')], choices=category_choices, validate_choice=False)
     ep_type = SelectField('Episode type', [InputRequired('Choose the episode type.')], choices=[('episodic', 'Episodic'), ('serial', 'Serial')], validate_choice=False)
@@ -40,8 +41,8 @@ class PodcastEdit(FlaskForm):
 class EpisodeEdit(FlaskForm):
     title = StringField('Title', [InputRequired('Enter the title.')])
     description = TextAreaField('Description', [InputRequired('Enter the description.')])
-    audio = FileField('Audio', [InputRequired('Upload the audio file.')])
-    image = FileField('Thumbnail')
+    audio = FileField('New Audio')
+    image = FileField('New Thumbnail')
     allowed_regions = SelectMultipleField('Allowed regions', choices=region_choices)
     explicit = BooleanField('Explicit')
     episode_type = SelectField('Type', [InputRequired('Choose the episode type.')], choices=[('full','Full'),('trailer','Trailer'),('bonus','Bonus')])

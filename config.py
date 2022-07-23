@@ -28,3 +28,5 @@ CSRF_SESSION_KEY = uuid4().hex
 SECRET_KEY = uuid4().hex
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+UPLOAD_DIR = os.path.join(BASE_DIR, 'uploads')

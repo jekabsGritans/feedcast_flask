@@ -1,10 +1,12 @@
-from flask import Blueprint, Response, request, session, render_template, flash, redirect, url_for, abort
+from flask import Blueprint, Response, request, session, render_template, flash, redirect, url_for, abort, current_app
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
 from app import db
 from app.auth.models import User
 from app.podcast.models import Podcast, Episode
 from app.podcast.feeds import PodcastFeed
 from app.podcast.forms import PodcastEdit, EpisodeEdit
-
+import os
 pod = Blueprint('podcast', __name__, url_prefix='')
 
 @pod.route('/')
@@ -44,6 +46,8 @@ def delete(podcast_id):
     podcast = Podcast.query.filter_by(id=podcast_id, user_id=user_id).first()
     if not podcast:
         abort(404)
+    if os.exists(podcast.image):
+        os.remove(podcast.image)
     db.session.delete(podcast)
     db.session.commit()
     return redirect(url_for('podcast.index'))
@@ -70,7 +74,7 @@ def edit(podcast_id):
     podcast = Podcast.query.get_or_404(podcast_id)
     if podcast.user_id != user_id:
         abort(404)
-    form = PodcastEdit(request.form)
+    form = PodcastEdit()
     
     if form.validate_on_submit():
         podcast.title = form.title.data
@@ -82,10 +86,12 @@ def edit(podcast_id):
         podcast.ep_limit = form.ep_limit.data
         podcast.allowed_regions = ' '.join(form.allowed_regions.data)
         podcast.origin = form.origin.data
-
-        #podcast.image = 
-        #save image file and update image url
-
+        image = form.image.data
+        if image:
+            if os.path.exists(podcast.image):
+                os.remove(podcast.image)
+            podcast.image = os.path.join(current_app.config['UPLOAD_DIR'], secure_filename(image.filename))
+            form.image.data.save(podcast.image)
         podcast.link = url_for('podcast.feed', podcast_id=podcast.id)
         podcast.author_name = user.name
         podcast.author_email = user.email
@@ -95,7 +101,6 @@ def edit(podcast_id):
     form.title.data = podcast.title
     form.description.data = podcast.description
     form.language.data = podcast.language
-    #form.image.data = # LOAD THE FILE
     form.category.data = podcast.categories
     form.explicit.data = podcast.explicit
     form.ep_type.data = podcast.ep_type
@@ -113,23 +118,31 @@ def edit_ep(episode_id):
     episode = Episode.query.get_or_404(episode_id)
     if episode.podcast.user_id != user_id:
         abort(404)
-    form = EpisodeEdit(obj=episode)
+    form = EpisodeEdit()
 
     if form.validate_on_submit():
         episode.title = form.title.data
         episode.description = form.description.data
-        # episode.audio = 
-        # episode.image = 
+        image = form.image.data
+        if image:
+            if os.path.exists(episode.image):
+                os.remove(episode.image)
+            episode.image = os.path.join(current_app.config['UPLOAD_DIR'], secure_filename(image.filename))
+            form.image.data.save(episode.image)
+        audio = form.audio.data
+        if audio:
+            if os.path.exists(episode.audio):
+                os.remove(episode.audio)
+            episode.audio = os.path.join(current_app.config['UPLOAD_DIR'], secure_filename(audio.filename))
+            form.audio.data.save(episode.audio)
         episode.allowed_regions = ' '.join(form.allowed_regions.data)
         episode.explicit = form.explicit.data
         episode.episode_type = form.episode_type.data
         db.session.commit()
-        return redirect(url_for('podcast.view_ep', episode_id=episode_id))
+        return redirect(url_for('podcast.view', podcast_id=episode.podcast_id))
     
     form.title.data = episode.title
     form.description.data = episode.description
-    # form.audio.data = 
-    # form.image.data = 
     if episode.allowed_regions:
         form.allowed_regions.data = episode.allowed_regions.split(' ')
     form.explicit.data = episode.explicit
@@ -142,8 +155,12 @@ def delete_ep(episode_id):
         return redirect(url_for('auth.signin'))
     user_id = session.get('user')
     episode = Episode.query.get_or_404(episode_id)
-    if episode.podcast.user.id != user_id:
+    if episode.podcast.user_id != user_id:
         abort(404)
+    if os.exists(episode.image):
+        os.remove(episode.image)
+    if os.exists(episode.audio):
+        os.remove(episode.audio)
     db.session.delete(episode)
     db.session.commit()
     return redirect(url_for('podcast.show', podcast_id=episode.podcast_id))

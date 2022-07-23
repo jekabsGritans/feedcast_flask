@@ -21,7 +21,7 @@
             <tbody>
                 {% for episode in episodes %}
                 <tr>
-                    <td> episode.title </td>
+                    <td> {{ episode.title }}</td>
                     <td>{{ episode.description }}</td>
                     <td>
                         <a href="{{ url_for('podcast.edit_ep', episode_id=episode.id) }}" class="btn btn-primary">Edit</a>

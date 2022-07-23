@@ -6,8 +6,8 @@
 <div class="container">
     <h1 class="h3 mb-3 font-weight-normal">Edit Podcast</h1>
     <main>
-        <form method="POST">
-            {{ form.csrf_token }}
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
             <div class="mb-3">
                 {{ form.title.label }}
                 {{ form.title(class="form-control") }}
@@ -22,7 +22,7 @@
             </div>
             <div class="mb-3">
                 {{ form.image.label }}
-                {{ form.image(class="form-control")}}
+                {{ form.image(class="form-control") }}
             </div>
             <div class="mb-3">
                 {{ form.explicit(class="form-check-input")}}
