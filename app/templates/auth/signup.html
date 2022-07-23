@@ -16,7 +16,7 @@
     <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
     <main class="form-signin">
         <form method="POST">
-            {{ form.csrf_token }}
+            {{ form.hidden_tag() }}
             {% with messages = get_flashed_messages() %}
             {% if messages%}
             {% for msg in messages %}
