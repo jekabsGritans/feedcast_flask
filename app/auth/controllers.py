@@ -9,6 +9,8 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 @auth.route('/signin/', methods=['POST','GET'])
 def signin():
+    session['user'] = 1 #force login for dev
+    return redirect('/')
     form = SignInForm(request.form)
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()

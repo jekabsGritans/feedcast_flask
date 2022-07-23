@@ -17,6 +17,11 @@ with open('app/static/languages.csv','r') as f:
         code, name = row.split(',')
         language_choices.append((code,name))
 
+with open('app/static/categories.txt','r') as f:
+    cats = f.read().split('\n')
+    category_choices = [(cat,cat) for cat in cats]
+
+
 #add separate form elements for release scheduling, etc.
 class PodcastEdit(FlaskForm):
     title = StringField('Title', [InputRequired('Enter the title.')])
@@ -24,8 +29,8 @@ class PodcastEdit(FlaskForm):
     language = SelectField('Language',[InputRequired(message='Choose the language.')], choices=language_choices)
     image = FileField('Thumbnail')
     explicit = BooleanField('Explicit')
-    category = SelectField('Content category', [InputRequired(message='Choose the category.')])
-    sub_categories = SelectMultipleField('Subcategories')#load choices based on main cat
+    category = SelectField('Content category', [InputRequired(message='Choose the category.')], choices=category_choices)
+    #sub_categories = SelectMultipleField('Subcategories')#load choices based on main cat
     ep_type = SelectField('Episode type', [InputRequired('Choose the episode type.')], choices=[('episodic', 'Episodic'), ('serial', 'Serial')])
     allowed_regions = SelectMultipleField('Allowed regions', choices=region_choices)
     ep_limit = IntegerField('Episode limit')

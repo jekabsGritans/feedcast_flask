@@ -13,7 +13,7 @@ def index():
         return redirect(url_for('auth.signin'))
     user_id = session.get('user')
     podcasts = Podcast.query.filter_by(user_id=user_id).all()
-    return render_template('podcast/index.html', podcasts=podcasts)
+    return render_template('podcast/index.html', podcasts=podcasts, user_id=user_id)
 
 @pod.route('/<int:podcast_id>/')
 def show(podcast_id):
@@ -76,11 +76,11 @@ def edit(podcast_id):
     #form.image.data = # LOAD THE FILE
     form.explicit.data = podcast.explicit
 
-    cats = podcast.categories.split()
-    form.category.data = cats[0]
+    #cats = podcast.categories.split()
+    #form.category.data = cats[0]
     #form.sub_categories.data = cats[1:]
     
-    form.ep_type = podcast.ep_type
+    form.ep_type.data = podcast.ep_type
 
     if form.validate_on_submit():
         podcast.title = form.title.data
